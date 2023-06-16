@@ -1,3 +1,8 @@
+import csv
+from datetime import datetime
+import strategies as s
+
+import numpy as np
 
 if __name__ == '__main__':
     '''
@@ -10,11 +15,15 @@ if __name__ == '__main__':
                     B Defect	B Cooperate
         A Defect	   2/2	     10/1
         A Cooperate	   1/10      3/3
+        
+        Move = cooperate/defect
+        Strategy = always cooperate, always defect, tit-for-tat etc
     '''
 
     '''
     Each solution will be a collection of D preset strategies (always cooperate, always defect, tit-for-tat, etc)
-        This can be represented as an array of D integers, where each integer corresponds to a strategy according to an enum
+        This can be represented as an array of D integers, where each integer corresponds to a strategy according to an enum,
+        the value of which is a function outlining how the player comes up with the move
     In every generation, a player will play each strategy against D other opponents, N times
     Each opponent will have a random strategy
     The objective values will be the accumulated points over N games
@@ -24,3 +33,17 @@ if __name__ == '__main__':
         Crossover: take the first rounded D/2 strategies from parent A and the second rounded D/2 strategies from parent B
         Mutation: change a random strategy to some other random strategy
     '''
+
+    output_filename = f"output/output {datetime.now().strftime('Y-%m-%d_%H-%M-%S.csv')}"
+    population_size = 6
+
+    with open(output_filename, 'w', newline='') as file:
+        writer = csv.writer(file)
+
+        # INITIALISATION    ===================================
+        current_gen = np.random.randint(0, len(s.strategies), size=population_size)
+        strategies_str = ''.join(map(str, current_gen))
+        writer.writerow(['STAGE', 'INITIALISATION'])
+        writer.writerow([strategies_str])
+
+
