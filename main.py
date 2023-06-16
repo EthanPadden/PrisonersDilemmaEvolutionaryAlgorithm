@@ -4,7 +4,15 @@ import strategies as s
 
 import numpy as np
 
+from Game import Game
 from Player import Player
+
+def evaluate(player):
+    for i in range(0, Player.num_strategies):
+        game = Game(player)
+        game.play()
+        player.next_strategy()
+
 
 if __name__ == '__main__':
     '''
@@ -51,5 +59,11 @@ if __name__ == '__main__':
         for solution in current_gen:
             print(solution.to_string())
         writer.writerow(current_gen)
+
+        # EVALUATION
+        for player in current_gen:
+            evaluate(player)
+            print(player.get_points())
+
 
 
