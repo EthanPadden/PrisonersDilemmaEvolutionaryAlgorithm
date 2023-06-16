@@ -38,7 +38,7 @@ if __name__ == '__main__':
     Each opponent will have a random strategy
     The objective values will be the accumulated points over N games
     Termination will be determined by a max number of generations
-    Selection will be done by sorting solution by objective values and selecting the top solutions (the number of which will be a variable in settings)
+    Selection will be done by sorting solution by objective values and selecting the top  solutions (the number of which will be a variable in settings)
     Variation:
         Crossover: take the first rounded D/2 strategies from parent A and the second rounded D/2 strategies from parent B
         Mutation: change a random strategy to some other random strategy
@@ -46,6 +46,7 @@ if __name__ == '__main__':
 
     output_filename = f"output/output {datetime.now().strftime('Y-%m-%d_%H-%M-%S.csv')}"
     population_size = 6
+    num_selected_solns = 4
 
     with open(output_filename, 'w', newline='') as file:
         writer = csv.writer(file)
@@ -64,6 +65,13 @@ if __name__ == '__main__':
         for player in current_gen:
             evaluate(player)
             print(player.get_points())
+
+        # SELECTION
+        sorted_solutions = sorted(current_gen, key=lambda solution: solution.get_points(), reverse=True)
+        next_gen = []
+        for i in range(0, num_selected_solns):
+            next_gen.append(sorted_solutions[i])
+
 
 
 
