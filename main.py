@@ -4,6 +4,8 @@ import strategies as s
 
 import numpy as np
 
+from Player import Player
+
 if __name__ == '__main__':
     '''
     Prisoner's Dilemma terminology used here:
@@ -41,9 +43,13 @@ if __name__ == '__main__':
         writer = csv.writer(file)
 
         # INITIALISATION    ===================================
-        current_gen = np.random.randint(0, len(s.strategies), size=population_size)
-        strategies_str = ''.join(map(str, current_gen))
+        current_gen = []
+        for i in range(0, population_size):
+            current_gen.append(Player())
+
         writer.writerow(['STAGE', 'INITIALISATION'])
-        writer.writerow([strategies_str])
+        for solution in current_gen:
+            print(solution.to_string())
+        writer.writerow(current_gen)
 
 
