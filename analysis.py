@@ -13,7 +13,7 @@ def scatter_plot_objective_space():
         current_gen_num = 0
         gen_pts = [[]]
         for row in reader:
-            if int(int(row[0])) != current_gen_num:
+            if int(row[0]) != current_gen_num:
                 if int(row[0]) != (current_gen_num+1):
                     raise Exception
                 else:
@@ -39,6 +39,51 @@ def scatter_plot_objective_space():
 
         plt.show()
 
+def line_graph_points_stats():
+    with open(output_filename, 'r') as file:
+        reader = csv.reader(file)
+        color_codes = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
+        handles = []
+        labels = []
+
+        gen_nums = [0]
+        avg_points = [0]
+        best_points = [0]
+        worst_points = [0]
+
+        current_gen_num = 0
+        for row in reader:
+            if int(row[0]) != current_gen_num:
+                if int(row[0]) != (current_gen_num+1):
+                    raise Exception
+                else:
+                    # We are in the next generation
+                    current_gen_num = current_gen_num + 1
+                    gen_nums.append(current_gen_num)
+                    avg_points.append(0)
+                    best_points.append(0)
+                    worst_points.append(0)
+
+                avg_points[current_gen_num] += int(row[2])
+                current_best_pts = best_points[current_gen_num]
+                best_points[current_gen_num] = max(current_best_pts, int(row[2]))
+                current_worst_pts = worst_points[current_gen_num]
+                worst_points[current_gen_num] = min(current_worst_pts, int(row[2]))
+
+        for avg_pts_gen_num in range(0, len(avg_points)):
+            total_pts = avg_points[avg_pts_gen_num]
+            avg_points[avg_pts_gen_num] = total_pts/current_gen_num
+
+        plt.plot(gen_nums, avg_points, marker='o', linestyle='-', color='b', label='avg')
+        plt.plot(gen_nums, best_points, marker='o', linestyle='-', color='g', label='best')
+        plt.plot(gen_nums, worst_points, marker='o', linestyle='-', color='r', label='worst')
+
+        plt.title('Points')
+        plt.xlabel('generation')
+        plt.ylabel('points')
+        plt.show()
+
+        plt.show()
 
 if __name__ == '__main__':
-    scatter_plot_objective_space()
+    line_graph_points_stats()
