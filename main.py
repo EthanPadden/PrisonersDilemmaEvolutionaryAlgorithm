@@ -1,5 +1,8 @@
 import csv
+import math
 from datetime import datetime
+import random
+
 import strategies as s
 
 import numpy as np
@@ -71,6 +74,50 @@ if __name__ == '__main__':
         next_gen = []
         for i in range(0, num_selected_solns):
             next_gen.append(sorted_solutions[i])
+
+        # VARIATION
+        # crossover
+        print(sorted_solutions)
+        print(next_gen)
+
+        while (len(next_gen) < population_size):
+            # choose the top 2 in the population - and pop them off so we dont consider them anymore
+            parent_a = current_gen.pop(0)
+            parent_b = current_gen.pop(0)
+            # CROSSOVER HERE
+            # offspring_c, offspring_d = tools.crossover(parent_a, parent_b)
+            # ceil rather than floor - if we need to take 1 more from either parent it should be the one that has more points
+            crossover_point = math.ceil(Player.num_strategies / 2)
+            strategies_parent_a = parent_a.get_strategies()
+            strategies_parent_b = parent_b.get_strategies()
+
+            strategies_offspring_c = np.concatenate((strategies_parent_a[:crossover_point], strategies_parent_b[crossover_point:]))
+            strategies_offspring_d = np.concatenate((strategies_parent_b[:crossover_point], strategies_parent_a[crossover_point:]))
+            offspring_c = Player(strategies_offspring_c)
+            offspring_d = Player(strategies_offspring_d)
+
+            # ADD SOLNS TO NEXT GEN
+            next_gen.append(offspring_c)
+            if len(next_gen) < population_size:
+                next_gen.append(offspring_d)
+
+        # mutation
+        # choose a random number of players in next generation
+        num_players_to_mutate = random.randint(1, population_size)
+        for i in range(1, num_players_to_mutate):
+            # choose a random player
+            player_index_to_mutate = random.randint(0, (population_size - 1))
+            player_to_mutate = next_gen[player_index_to_mutate]
+
+            # choose a random number of strategies to change? TODO
+            # choose a random strategy to change and a random value to change it to
+            strategy_index_to_change = random.randint(0, (Player.num_strategies - 1))
+            #TODO: ensure this is not the same as before?
+            # TODO: check if these range endpoints are includive/exclusive - currently assuming both inclusive
+            value_to_change_to = random.randint(0, (len(s.strategies)-1))
+
+            player_to_mutate.get_strategies()[strategy_index_to_change] = value_to_change_to
+            # TODO: more efficient way
 
 
 

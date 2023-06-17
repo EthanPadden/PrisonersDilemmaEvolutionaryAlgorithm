@@ -2,8 +2,11 @@ import strategies as s
 import numpy as np
 class Player:
     num_strategies = 6
-    def __init__(self):
-        self.__strategies = np.random.randint(0, len(s.strategies), size=Player.num_strategies)
+    def __init__(self, strategies=None):
+        if strategies is None:
+            self.__strategies = np.random.randint(0, len(s.strategies), size=Player.num_strategies)
+        else:
+            self.__strategies = strategies
         self.__points = 0
         self.__current_strategy_index = 0
 
@@ -23,6 +26,9 @@ class Player:
 
     def get_points(self):
         return self.__points
+
+    def get_strategies(self):
+        return self.__strategies
 
 
 
