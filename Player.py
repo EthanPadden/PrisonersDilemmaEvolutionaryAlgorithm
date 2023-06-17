@@ -33,5 +33,12 @@ class Player:
     def get_strategies(self):
         return self.__strategies
 
+    def to_csv(self):
+        return [
+            int(''.join(map(str, self.__strategies))),
+            self.__points
+        ]
+
+
 
 

@@ -61,10 +61,8 @@ if __name__ == '__main__':
         for i in range(0, population_size):
             current_gen.append(Player())
 
-        writer.writerow(['STAGE', 'INITIALISATION'])
         for solution in current_gen:
             print(solution.to_string())
-        writer.writerow(current_gen)
 
         #TODO: is the 0 argument in the range function necessary when used for 0 to value (not inclusive of the upper limit)?
         for gen in range(0, max_generations):
@@ -74,6 +72,12 @@ if __name__ == '__main__':
                     player.reset_strategy_index()
                     evaluate(player)
                     print(player.get_points())
+                    output = []
+                    output.append(gen)
+                    output.append(player.to_csv()[0])
+                    output.append(player.to_csv()[1])
+                    writer.writerow(output)
+
 
                 # SELECTION
                 sorted_solutions = sorted(current_gen, key=lambda solution: solution.get_points(), reverse=True)
