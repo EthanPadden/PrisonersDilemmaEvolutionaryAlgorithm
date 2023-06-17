@@ -19,6 +19,9 @@ class Player:
     def next_strategy(self):
         self.__current_strategy_index += 1
 
+    def reset_strategy_index(self):
+        self.__current_strategy_index = 0
+
     def make_move(self, moves):
         strategy_num = self.__strategies[self.__current_strategy_index]
         strategy = s.strategies[strategy_num]
