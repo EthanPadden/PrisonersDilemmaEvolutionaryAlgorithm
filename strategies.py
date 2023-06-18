@@ -26,6 +26,7 @@ Fortress4: Same as Fortress3 except that it plays D, D, D, C in recognizing kin 
 Collective strategy: Plays C and D in the first and second move. If the opponent has played the same moves, plays Tit For Tat. Otherwise, plays Always Defect.
 Southampton Group strategies: A group of strategies are designed to recognize each other through a predetermined sequence of 5–10 moves at the start. Once two of these strategies recognize each other, they will act as a ‘master’ or ‘slave’ role — a master will always defect while a slave will always cooperate in order for the master to win the maximum points. If the opponent is recognized as not being a SGS, it will immediately defect to minimize the score of the opponent.
 '''
+import random
 
 '''
 List of moves in the form:
@@ -46,7 +47,7 @@ def tit_for_tat(moves):
     if len(moves) == 0:
         return True
     else:
-        return moves[-1]
+        return moves[-1][1]
 
 def tit_for_2_tats(moves):
     # Cooperates on the first move, and defects only when the opponent defects two times in a row.
@@ -68,11 +69,22 @@ def firm_but_fair(moves):
         else:
             return True
 
+def generous_tit_for_tat(moves):
+    # Same as Tit For Tat, except that it cooperates with a 10% probability when the opponent defects.
+    if len(moves) == 0:
+        return True
+    else:
+        if moves[-1][1] == False:
+            return random.random() < 0.1
+        else:
+            return True
+
 
 strategies = [
     always_cooperate,
     always_defect,
     tit_for_tat,
     tit_for_2_tats,
-    firm_but_fair
+    firm_but_fair,
+    generous_tit_for_tat
 ]

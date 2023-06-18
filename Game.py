@@ -37,3 +37,10 @@ class Game:
                 # Both cooperate - result is 3/3
                 self.__player.add_points(3)
                 self.__opponent.add_points(3)
+            else:
+                raise Exception
+
+            self.__moves.append([move_A, move_B])
+
+
+
