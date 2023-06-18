@@ -50,7 +50,8 @@ class Participant:
             self.hard_tit_for_tat,
             self.two_tits_for_tat,
             self.grim_trigger,
-            self.suspicious_tit_for_tat
+            self.suspicious_tit_for_tat,
+            self.reverse_tit_for_tat
         ]
         self.__temp_vars = {}
 
@@ -165,3 +166,11 @@ class Participant:
             return False
         else:
             return moves[-1][1]
+
+    def reverse_tit_for_tat(self, moves):
+        # It does the reverse of TFT. It defects on the first move, then plays the reverse of the opponent’s last move.
+        # Start by cooperating, then copy whatever the other player did last move.
+        if len(moves) == 0:
+            return False
+        else:
+            return not moves[-1][1]
