@@ -96,6 +96,16 @@ def soft_majority(moves):
         return True
     else:
         return False
+
+def hard_tit_for_tat(moves):
+    # Cooperates on the first move, and defects if the opponent has defected on any of the previous 3 moves, else cooperates.
+    if len(moves) < 3:
+        return True
+    if moves[-1][1] == moves[-2][1] == moves[-3][1] == False:
+        return False
+    else:
+        return True
+
 strategies = [
     always_cooperate,
     always_defect,
@@ -103,5 +113,6 @@ strategies = [
     tit_for_2_tats,
     firm_but_fair,
     generous_tit_for_tat,
-    soft_majority
+    soft_majority,
+    hard_tit_for_tat
 ]
