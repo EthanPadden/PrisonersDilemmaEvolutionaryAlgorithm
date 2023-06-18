@@ -39,12 +39,54 @@ def scatter_plot_objective_space():
 
         plt.show()
 
-def line_graph_points_stats():
+def line_graph_points():
     with open(output_filename, 'r') as file:
-        reader = csv.reader(file)
+        reader = csv.reader(file, quoting=csv.QUOTE_NONNUMERIC)
         color_codes = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
         handles = []
         labels = []
+        cgen = 0
+        alpha = []
+        row = next(reader, None)
+
+        while row:
+            cplr = 0
+            while row[0] == cgen:
+                # While were in the same generation
+                if cgen == 0:
+                    alpha.append([])
+
+                # regardless
+                alpha[cplr].append(int(row[2]))
+                cplr += 1
+                row = next(reader, None)
+                if not row:
+                    break
+
+            if not row:
+                break
+            if row[0] != (cgen + 1):
+                raise Exception
+            cgen += 1
+
+        gen_nums = []
+        for i in range(0, (cgen+1)):
+            gen_nums.append(i)
+        for i in range(0, len(alpha)):
+            color_code = color_codes[i % len(color_codes)]
+            beta = alpha[i]
+            plt.plot(gen_nums, beta, marker='o', linestyle='-', color=color_code, label=i)
+
+        plt.title('Points')
+        plt.xlabel('generation')
+        plt.ylabel('points')
+        plt.show()
+
+
+def line_graph_points_stats():
+    with open(output_filename, 'r') as file:
+        reader = csv.reader(file)
+
 
         gen_nums = [0]
         avg_points = [0]
@@ -83,7 +125,5 @@ def line_graph_points_stats():
         plt.ylabel('points')
         plt.show()
 
-        plt.show()
-
 if __name__ == '__main__':
-    line_graph_points_stats()
+    line_graph_points()
