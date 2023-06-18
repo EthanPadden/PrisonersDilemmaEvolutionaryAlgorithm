@@ -106,6 +106,22 @@ def hard_tit_for_tat(moves):
     else:
         return True
 
+def two_tits_for_tat(moves):
+    # Same as Tit For Tat except that it defects 2x whenever the opponent defects.
+    if len(moves) == 0:
+        return True
+    elif len(moves) == 1:
+        if moves[-1][1] == False:
+            return False
+        else:
+            return True
+    else:
+        if moves[-1][1] or moves [-2][1] == False:
+            # We want to defect on the next 2 moves
+            return False
+        else:
+            return True
+
 strategies = [
     always_cooperate,
     always_defect,
@@ -114,5 +130,6 @@ strategies = [
     firm_but_fair,
     generous_tit_for_tat,
     soft_majority,
-    hard_tit_for_tat
+    hard_tit_for_tat,
+    two_tits_for_tat
 ]
