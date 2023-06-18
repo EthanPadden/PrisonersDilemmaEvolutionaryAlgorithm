@@ -72,5 +72,7 @@ def firm_but_fair(moves):
 strategies = [
     always_cooperate,
     always_defect,
-    tit_for_tat
+    tit_for_tat,
+    tit_for_2_tats,
+    firm_but_fair
 ]

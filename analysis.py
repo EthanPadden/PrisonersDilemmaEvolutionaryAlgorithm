@@ -2,7 +2,7 @@ import csv
 import matplotlib.pyplot as plt
 
 
-output_filename = 'output/output Y-06-18_17-03-53.csv'
+output_filename = 'output/output Y-06-18_18-15-36.csv'
 def scatter_plot_objective_space():
     with open(output_filename, 'r') as file:
         reader = csv.reader(file)

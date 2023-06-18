@@ -134,6 +134,3 @@ if __name__ == '__main__':
                 print(f'GENERATION: {gen}')
                 print(traceback.format_exc())
                 exit()
-
-
-
