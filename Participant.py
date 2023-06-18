@@ -49,7 +49,8 @@ class Participant:
             self.soft_majority,
             self.hard_tit_for_tat,
             self.two_tits_for_tat,
-            self.grim_trigger
+            self.grim_trigger,
+            self.suspicious_tit_for_tat
         ]
         self.__temp_vars = {}
 
@@ -156,3 +157,11 @@ class Participant:
             return False
         else:
             raise Exception
+
+    def suspicious_tit_for_tat(self, moves):
+        # Same as Tit For Tat, except that it defects on the first move.
+        # Start by cooperating, then copy whatever the other player did last move.
+        if len(moves) == 0:
+            return False
+        else:
+            return moves[-1][1]
