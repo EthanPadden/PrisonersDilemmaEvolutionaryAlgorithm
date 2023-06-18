@@ -3,22 +3,22 @@ import random
 class Participant:
     '''
     POSSIBLE STRATEGIES
-    Always cooperate
-    Always defect
-    Tit for tat
+   * Always cooperate
+   * Always defect
+   * Tit for tat
     Random
-    Tit For Two Tats: Cooperates on the first move, and defects only when the opponent defects two times in a row.
-    Firm But Fair: Cooperates on the first move, and continues to cooperate until the other side defects. Then, it will try to cooperate again after (D|D).
-    Generous Tit for Tat: Same as Tit For Tat, except that it cooperates with a 10% probability when the opponent defects.
-    Soft Majority: Cooperates on the first move, and cooperates as long as the number of times the opponent has cooperated is greater than or equal to the number of times it has defected, else it defects.
-    Hard Tit for Tat: Cooperates on the first move, and defects if the opponent has defected on any of the previous 3 moves, else cooperates.
-    Two Tits for Tat: Same as Tit For Tat except that it defects 2x whenever the opponent defects.
+   * Tit For Two Tats: Cooperates on the first move, and defects only when the opponent defects two times in a row.
+   * Firm But Fair: Cooperates on the first move, and continues to cooperate until the other side defects. Then, it will try to cooperate again after (D|D).
+   * Generous Tit for Tat: Same as Tit For Tat, except that it cooperates with a 10% probability when the opponent defects.
+   * Soft Majority: Cooperates on the first move, and cooperates as long as the number of times the opponent has cooperated is greater than or equal to the number of times it has defected, else it defects.
+   * Hard Tit for Tat: Cooperates on the first move, and defects if the opponent has defected on any of the previous 3 moves, else cooperates.
+   * Two Tits for Tat: Same as Tit For Tat except that it defects 2x whenever the opponent defects.
     Gradual: Cooperates on the first move, and cooperates as long as the opponent cooperates. After the first defection of the other player, it defects 1x and cooperates 2x. After the Nth defection it reacts with N consecutive defections and then calms down its opponent with two cooperations, in order to reset them if they are also forgiving.
     Soft Grudger: Cooperates, until the opponent defects, then punishes them with D, D, D, D, C, C.
-    Grim trigger: Cooperates, until the opponent defects, and thereafter always defects.
-    Suspicious Tit for Tat: Same as Tit For Tat, except that it defects on the first move.
+   * Grim trigger: Cooperates, until the opponent defects, and thereafter always defects.
+   * Suspicious Tit for Tat: Same as Tit For Tat, except that it defects on the first move.
     Hard Majority: Defects on the first move, and defects if the number of defections of the opponent is greater than or equal to the number of times it has cooperated, else cooperates.
-    Reverse Tit for Tat: It does the reverse of TFT. It defects on the first move, then plays the reverse of the opponent’s last move.
+   * Reverse Tit for Tat: It does the reverse of TFT. It defects on the first move, then plays the reverse of the opponent’s last move.
     Prober
     Handshake: Defects on the first move and cooperates on the second move. If the opponent plays the same moves, it always cooperates. Otherwise, it always defects.
     Naive Prober: Like Tit for Tat, but occasionally defects with a small probability. The probing, in this case, is to occasionally test for an overly-forgiving strategy.
@@ -40,6 +40,7 @@ class Participant:
     '''
     def __init__(self):
         self.strategies = [
+            self.random,
             self.always_cooperate,
             self.always_defect,
             self.tit_for_tat,
@@ -54,6 +55,9 @@ class Participant:
             self.reverse_tit_for_tat
         ]
         self.__temp_vars = {}
+
+    def random(self, moves=None):
+        return random.random() < 0.5
 
     def always_cooperate(self, moves=None):
         return True
