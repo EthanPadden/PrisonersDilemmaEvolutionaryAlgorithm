@@ -48,8 +48,10 @@ class Participant:
             self.generous_tit_for_tat,
             self.soft_majority,
             self.hard_tit_for_tat,
-            self.two_tits_for_tat
+            self.two_tits_for_tat,
+            self.grim_trigger
         ]
+        self.__temp_vars = {}
 
     def always_cooperate(self, moves=None):
         return True
@@ -136,3 +138,21 @@ class Participant:
                 return False
             else:
                 return True
+
+    def grim_trigger(self, moves):
+        # Cooperates, until the opponent defects, and thereafter always defects.
+        # Use the temp variable opponent_has_defected to store if the opponent defected,
+        # rather than iterating through all of the moves again
+        if len(self.__temp_vars) == 0:
+            if len(moves) == 0:
+                return True
+            # Check did the opponent defect in the last move
+            elif moves[-1][1] == False:
+                self.__temp_vars['opponent_has_defected'] = True
+                return False
+            else:
+                return True
+        elif self.__temp_vars['opponent_has_defected'] == True:
+            return False
+        else:
+            raise Exception

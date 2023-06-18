@@ -69,7 +69,7 @@ if __name__ == '__main__':
             try:
                 # EVALUATION
                 for player in current_gen:
-                    player.reset_strategy_index()
+                    player.reset()
                     evaluate(player)
                     print(player.get_points())
                     output = []

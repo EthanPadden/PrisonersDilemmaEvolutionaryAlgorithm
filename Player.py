@@ -22,13 +22,15 @@ class Player(Participant):
     def next_strategy(self):
         self.__current_strategy_index += 1
 
-    def reset_strategy_index(self):
-        self.__current_strategy_index = 0
-
     def make_move(self, moves):
         strategy_num = self.__strategies[self.__current_strategy_index]
         strategy = self.strategies[strategy_num]
         return strategy(moves)
+
+    def reset(self):
+        self.__temp_variables = {}
+        self.__current_strategy_index = 0
+
 
     def get_points(self):
         return self.__points
