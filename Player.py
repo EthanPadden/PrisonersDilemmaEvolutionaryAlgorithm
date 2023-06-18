@@ -1,10 +1,13 @@
-import strategies as s
 import numpy as np
-class Player:
+from Participant import Participant
+
+
+class Player(Participant):
     num_strategies = 6
     def __init__(self, strategies=None):
+        super().__init__()
         if strategies is None:
-            self.__strategies = np.random.randint(0, len(s.strategies), size=Player.num_strategies)
+            self.__strategies = np.random.randint(0, len(self.strategies), size=Player.num_strategies)
         else:
             self.__strategies = strategies
         self.__points = 0
@@ -24,7 +27,7 @@ class Player:
 
     def make_move(self, moves):
         strategy_num = self.__strategies[self.__current_strategy_index]
-        strategy = s.strategies[strategy_num]
+        strategy = self.strategies[strategy_num]
         return strategy(moves)
 
     def get_points(self):

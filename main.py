@@ -4,7 +4,7 @@ import traceback
 from datetime import datetime
 import random
 
-import strategies as s
+from Participant import Participant
 
 import numpy as np
 
@@ -124,7 +124,7 @@ if __name__ == '__main__':
                     strategy_index_to_change = random.randint(0, (Player.num_strategies - 1))
                     #TODO: ensure this is not the same as before?
                     # TODO: check if these range endpoints are includive/exclusive - currently assuming both inclusive
-                    value_to_change_to = random.randint(0, (len(s.strategies)-1))
+                    value_to_change_to = random.randint(0, (len(player_to_mutate.strategies)-1))
 
                     player_to_mutate.get_strategies()[strategy_index_to_change] = value_to_change_to
                     # TODO: more efficient way

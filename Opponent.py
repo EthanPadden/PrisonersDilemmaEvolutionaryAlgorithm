@@ -1,7 +1,9 @@
 from random import randint
 
+from Participant import Participant
 
-class Opponent:
+
+class Opponent(Participant):
     def make_move(self):
         random_number = randint(0, 100)
         self.__points = 0
