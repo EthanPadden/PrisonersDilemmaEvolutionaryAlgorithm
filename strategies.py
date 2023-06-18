@@ -79,12 +79,29 @@ def generous_tit_for_tat(moves):
         else:
             return True
 
+def soft_majority(moves):
+    # Cooperates on the first move, and cooperates as long as the number of times the opponent has cooperated is greater than or equal to the number of times it has defected, else it defects.
+    if len(moves) == 0:
+        return True
 
+    num_times_opponent_cooperated = 0
+    num_times_opponent_defected = 0
+    for move in moves:
+        if move[1] == True:
+            num_times_opponent_cooperated += 1
+        else:
+            num_times_opponent_defected += 1
+
+    if num_times_opponent_cooperated >= num_times_opponent_defected:
+        return True
+    else:
+        return False
 strategies = [
     always_cooperate,
     always_defect,
     tit_for_tat,
     tit_for_2_tats,
     firm_but_fair,
-    generous_tit_for_tat
+    generous_tit_for_tat,
+    soft_majority
 ]
