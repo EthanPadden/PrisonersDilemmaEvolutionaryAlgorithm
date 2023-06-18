@@ -49,7 +49,7 @@ def tit_for_tat(moves):
         return moves[-1]
 
 def tit_for_2_tats(moves):
-    # Tit For Two Tats: Cooperates on the first move, and defects only when the opponent defects two times in a row.
+    # Cooperates on the first move, and defects only when the opponent defects two times in a row.
     if len(moves) < 2:
         return True
     else:
@@ -58,6 +58,15 @@ def tit_for_2_tats(moves):
         else:
             return True
 
+def firm_but_fair(moves):
+    # Cooperates on the first move, and continues to cooperate until the other side defects. Then, it will try to cooperate again after (D|D).
+    if len(moves) == 0:
+        return True
+    else:
+        if moves[-1][1] == False:
+            return False
+        else:
+            return True
 
 
 strategies = [
