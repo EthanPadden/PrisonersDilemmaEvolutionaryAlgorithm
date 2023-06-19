@@ -19,7 +19,7 @@ class Game:
     def play(self):
         for i in range(0, Game.num_rounds):
             move_A = self.__player.make_move(self.__moves)
-            move_B = self.__opponent.make_move()
+            move_B = self.__opponent.random(self.__moves)
 
             if move_A == False and move_B == False:
                 # Both defect - result is 2/2
@@ -37,3 +37,8 @@ class Game:
                 # Both cooperate - result is 3/3
                 self.__player.add_points(3)
                 self.__opponent.add_points(3)
+            else:
+                raise Exception
+
+            self.__moves.append([move_A, move_B])
+

@@ -4,7 +4,7 @@ import traceback
 from datetime import datetime
 import random
 
-import strategies as s
+from Participant import Participant
 
 import numpy as np
 
@@ -13,6 +13,7 @@ from Player import Player
 
 def evaluate(player):
     for i in range(0, Player.num_strategies):
+        player.reset()
         game = Game(player)
         game.play()
         player.next_strategy()
@@ -69,7 +70,6 @@ if __name__ == '__main__':
             try:
                 # EVALUATION
                 for player in current_gen:
-                    player.reset_strategy_index()
                     evaluate(player)
                     print(player.get_points())
                     output = []
@@ -124,7 +124,7 @@ if __name__ == '__main__':
                     strategy_index_to_change = random.randint(0, (Player.num_strategies - 1))
                     #TODO: ensure this is not the same as before?
                     # TODO: check if these range endpoints are includive/exclusive - currently assuming both inclusive
-                    value_to_change_to = random.randint(0, (len(s.strategies)-1))
+                    value_to_change_to = random.randint(0, (len(player_to_mutate.strategies)-1))
 
                     player_to_mutate.get_strategies()[strategy_index_to_change] = value_to_change_to
                     # TODO: more efficient way
@@ -134,6 +134,3 @@ if __name__ == '__main__':
                 print(f'GENERATION: {gen}')
                 print(traceback.format_exc())
                 exit()
-
-
-

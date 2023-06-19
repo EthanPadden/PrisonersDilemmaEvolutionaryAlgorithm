@@ -1,10 +1,15 @@
-import strategies as s
+import traceback
+
 import numpy as np
-class Player:
+from Participant import Participant
+
+
+class Player(Participant):
     num_strategies = 6
     def __init__(self, strategies=None):
+        super().__init__()
         if strategies is None:
-            self.__strategies = np.random.randint(0, len(s.strategies), size=Player.num_strategies)
+            self.__strategies = np.random.randint(0, len(self.strategies), size=Player.num_strategies)
         else:
             self.__strategies = strategies
         self.__points = 0
@@ -19,13 +24,19 @@ class Player:
     def next_strategy(self):
         self.__current_strategy_index += 1
 
-    def reset_strategy_index(self):
+    def make_move(self, moves):
+        try:
+            strategy_num = self.__strategies[self.__current_strategy_index]
+            strategy = self.strategies[strategy_num]
+            return strategy(moves)
+        except Exception as e:
+            print(traceback.format_exc())
+            return None
+
+    def reset(self):
+        self.__temp_variables = {}
         self.__current_strategy_index = 0
 
-    def make_move(self, moves):
-        strategy_num = self.__strategies[self.__current_strategy_index]
-        strategy = s.strategies[strategy_num]
-        return strategy(moves)
 
     def get_points(self):
         return self.__points
@@ -35,7 +46,7 @@ class Player:
 
     def to_csv(self):
         return [
-            int(''.join(map(str, self.__strategies))),
+            ''.join(map(str, self.__strategies)),
             self.__points
         ]
 
