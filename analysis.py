@@ -1,6 +1,6 @@
 import csv
 import matplotlib.pyplot as plt
-
+import settings as g
 
 output_filename = 'output/output Y-06-18_18-47-11.csv'
 def scatter_plot_objective_space():
@@ -125,5 +125,13 @@ def line_graph_points_stats():
         plt.ylabel('points')
         plt.show()
 
+graph_functions = [
+    scatter_plot_objective_space,
+    line_graph_points,
+    line_graph_points_stats
+]
+
 if __name__ == '__main__':
-    line_graph_points()
+    graph_function_index = g.graph_option.value
+    graph_function = graph_functions[graph_function_index]
+    graph_function()
