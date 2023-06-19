@@ -17,7 +17,7 @@ class Participant:
    * Soft Grudger: Cooperates, until the opponent defects, then punishes them with D, D, D, D, C, C.
    * Grim trigger: Cooperates, until the opponent defects, and thereafter always defects.
    * Suspicious Tit for Tat: Same as Tit For Tat, except that it defects on the first move.
-    Hard Majority: Defects on the first move, and defects if the number of defections of the opponent is greater than or equal to the number of times it has cooperated, else cooperates.
+   * Hard Majority: Defects on the first move, and defects if the number of defections of the opponent is greater than or equal to the number of times it has cooperated, else cooperates.
    * Reverse Tit for Tat: It does the reverse of TFT. It defects on the first move, then plays the reverse of the opponent’s last move.
     Prober
     Handshake: Defects on the first move and cooperates on the second move. If the opponent plays the same moves, it always cooperates. Otherwise, it always defects.
@@ -27,7 +27,7 @@ class Participant:
     Pavlov: Plays Tit For Tat in the first six moves and identifies the opponent by means of a rule-based mechanism. The strategies of the opponent are categorized into four groups: Tit For Tat, Always Defect, Suspicious Tit For Tat, and Random. If the other player doesn’t start defecting, it is identified to be cooperative and will behave as Tit For Tat. If the other player defects more than four times in six consecutive moves, it is identified as an Always Defect type and will always defect. If the opponent just defects three times in six moves, it is identified as Suspicious Tit For Tat type and will adopt Tit For Two Tats in order to recover mutual cooperation. Any strategy that does not belong to the former three categories will be identified as a random type. In this situation, Pavlov will play Always Defect. In order to deal with the situations in which the opponents may change their actions, the average payoff is computed every six rounds. If it is lower than a threshold, the process of opponent identification may restart.
     Fortress3: Like Handshake, it tries to recognize kin members by playing D, D, C. If the opponent plays the same sequence of D, D, C, it cooperates until the opponent defects. Otherwise, it defects until the opponent defects on continuous two moves, and then it cooperates on the following move.
     Fortress4: Same as Fortress3 except that it plays D, D, D, C in recognizing kin members. If the opponent plays the same sequence of D, D, D, C, it cooperates until the opponent defects. Otherwise, it defects until the opponent defects on continuous three moves, and then it cooperates on the following move.
-    Collective strategy: Plays C and D in the first and second move. If the opponent has played the same moves, plays Tit For Tat. Otherwise, plays Always Defect.
+   * Collective strategy: Plays C and D in the first and second move. If the opponent has played the same moves, plays Tit For Tat. Otherwise, plays Always Defect.
     Southampton Group strategies: A group of strategies are designed to recognize each other through a predetermined sequence of 5–10 moves at the start. Once two of these strategies recognize each other, they will act as a ‘master’ or ‘slave’ role — a master will always defect while a slave will always cooperate in order for the master to win the maximum points. If the opponent is recognized as not being a SGS, it will immediately defect to minimize the score of the opponent.
     '''
 
@@ -54,7 +54,8 @@ class Participant:
             self.suspicious_tit_for_tat,
             self.reverse_tit_for_tat,
             self.soft_grudger,
-            self.hard_marjority
+            self.hard_marjority,
+            self.collective_strategy
         ]
         self.__temp_vars = {}
 
@@ -226,4 +227,19 @@ class Participant:
                 return False
             else:
                 return True
+
+    def collective_strategy(self, moves):
+        # Plays C and D in the first and second move.
+        # If the opponent has played the same moves, plays Tit For Tat.
+        # Otherwise, plays Always Defect.
+        # TODO: research this strategy and my interpretation - bit of ambiguity in the description
+        if len(moves) == 0:
+            return True
+        elif len(moves) == 1:
+            return False
+        else:
+            if moves[0][1] == True and moves[1][1] == False:
+                return self.tit_for_tat(moves)
+            else:
+                return self.always_defect(moves)
 
