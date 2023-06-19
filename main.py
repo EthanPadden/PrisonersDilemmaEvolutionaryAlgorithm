@@ -63,6 +63,7 @@ if __name__ == '__main__':
         for solution in current_gen:
             print(solution.to_string())
 
+        prev_avg_points = 0.00001
         #TODO: is the 0 argument in the range function necessary when used for 0 to value (not inclusive of the upper limit)?
         for gen in range(0, g.max_generations):
             try:
@@ -76,7 +77,20 @@ if __name__ == '__main__':
                     output.append(player.to_csv()[1])
                     writer.writerow(output)
 
-                # TODO: more comprehensive termination stage
+                # TODO: more comprehensive termination stage inc setting for max generations
+                # Termination
+                # Performance stagnation?
+                # Instead of a threshold value, we can take this as a percentage
+                # ie if we don't see an increase of at least 5% for the average fitness, stop
+                # Calculate average points
+                total_points = 0
+                for player in current_gen:
+                    total_points += player.get_points()
+                current_avg_points = total_points / len(current_gen)
+                diff_avg_points = current_avg_points - prev_avg_points
+                if ((diff_avg_points / prev_avg_points) * 100) < g.percentage_performance_stagnation:
+                    print(f'PERFORMANCE STAGNATION: {current_avg_points} - {prev_avg_points} = {diff_avg_points}')
+                    break
 
                 # SELECTION
                 sorted_solutions = sorted(current_gen, key=lambda solution: solution.get_points(), reverse=True)
@@ -129,6 +143,7 @@ if __name__ == '__main__':
                     # TODO: more efficient way
 
                 current_gen = next_gen
+                prev_avg_points = current_avg_points
             except Exception as e:
                 print(f'GENERATION: {gen}')
                 print(traceback.format_exc())

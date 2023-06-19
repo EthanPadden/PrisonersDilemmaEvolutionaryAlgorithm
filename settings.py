@@ -16,5 +16,6 @@ num_selected_solns = 4
 
 # Termination
 max_generations = 6
+percentage_performance_stagnation = 15
 
 # TODO: options for what strategies to include
