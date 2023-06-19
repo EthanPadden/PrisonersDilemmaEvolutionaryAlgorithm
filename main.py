@@ -3,6 +3,7 @@ import math
 import traceback
 from datetime import datetime
 import random
+import settings as g
 
 from Participant import Participant
 
@@ -49,24 +50,21 @@ if __name__ == '__main__':
         Mutation: change a random strategy to some other random strategy
     '''
 
-    output_filename = f"output/output {datetime.now().strftime('Y-%m-%d_%H-%M-%S.csv')}"
-    population_size = 6
-    num_selected_solns = 4
-    max_generations = 6
+    output_filename = f"{g.output_directory}/output {datetime.now().strftime('Y-%m-%d_%H-%M-%S.csv')}"
 
     with open(output_filename, 'w', newline='') as file:
         writer = csv.writer(file)
 
         # INITIALISATION    ===================================
         current_gen = []
-        for i in range(0, population_size):
+        for i in range(0, g.population_size):
             current_gen.append(Player())
 
         for solution in current_gen:
             print(solution.to_string())
 
         #TODO: is the 0 argument in the range function necessary when used for 0 to value (not inclusive of the upper limit)?
-        for gen in range(0, max_generations):
+        for gen in range(0, g.max_generations):
             try:
                 # EVALUATION
                 for player in current_gen:
@@ -78,11 +76,12 @@ if __name__ == '__main__':
                     output.append(player.to_csv()[1])
                     writer.writerow(output)
 
+                # TODO: more comprehensive termination stage
 
                 # SELECTION
                 sorted_solutions = sorted(current_gen, key=lambda solution: solution.get_points(), reverse=True)
                 next_gen = []
-                for i in range(0, num_selected_solns):
+                for i in range(0, g.num_selected_solns):
                     next_gen.append(sorted_solutions[i])
 
                 # VARIATION
@@ -90,7 +89,7 @@ if __name__ == '__main__':
                 print(sorted_solutions)
                 print(next_gen)
 
-                while (len(next_gen) < population_size):
+                while (len(next_gen) < g.population_size):
                     # choose the top 2 in the population - and pop them off so we dont consider them anymore
                     parent_a = current_gen.pop(0)
                     parent_b = current_gen.pop(0)
@@ -108,15 +107,15 @@ if __name__ == '__main__':
 
                     # ADD SOLNS TO NEXT GEN
                     next_gen.append(offspring_c)
-                    if len(next_gen) < population_size:
+                    if len(next_gen) < g.population_size:
                         next_gen.append(offspring_d)
 
                 # mutation
                 # choose a random number of players in next generation
-                num_players_to_mutate = random.randint(1, population_size)
+                num_players_to_mutate = random.randint(1, g.population_size)
                 for i in range(1, num_players_to_mutate):
                     # choose a random player
-                    player_index_to_mutate = random.randint(0, (population_size - 1))
+                    player_index_to_mutate = random.randint(0, (g.population_size - 1))
                     player_to_mutate = next_gen[player_index_to_mutate]
 
                     # choose a random number of strategies to change? TODO
