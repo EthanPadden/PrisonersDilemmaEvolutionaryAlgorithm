@@ -13,6 +13,7 @@ from Player import Player
 
 def evaluate(player):
     for i in range(0, Player.num_strategies):
+        player.reset()
         game = Game(player)
         game.play()
         player.next_strategy()
@@ -69,7 +70,6 @@ if __name__ == '__main__':
             try:
                 # EVALUATION
                 for player in current_gen:
-                    player.reset()
                     evaluate(player)
                     print(player.get_points())
                     output = []

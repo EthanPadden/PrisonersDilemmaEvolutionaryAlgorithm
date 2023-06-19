@@ -6,7 +6,7 @@ class Participant:
    * Always cooperate
    * Always defect
    * Tit for tat
-    Random
+   * Random
    * Tit For Two Tats: Cooperates on the first move, and defects only when the opponent defects two times in a row.
    * Firm But Fair: Cooperates on the first move, and continues to cooperate until the other side defects. Then, it will try to cooperate again after (D|D).
    * Generous Tit for Tat: Same as Tit For Tat, except that it cooperates with a 10% probability when the opponent defects.
@@ -52,7 +52,8 @@ class Participant:
             self.two_tits_for_tat,
             self.grim_trigger,
             self.suspicious_tit_for_tat,
-            self.reverse_tit_for_tat
+            self.reverse_tit_for_tat,
+            self.soft_grudger
         ]
         self.__temp_vars = {}
 
@@ -178,3 +179,31 @@ class Participant:
             return False
         else:
             return not moves[-1][1]
+
+    def soft_grudger(self, moves):
+        # Cooperates, until the opponent defects, then punishes them with D, D, D, D, C, C.
+        # Lets call the DDDDCC the move set
+        move_set = [False, False, False, False, True, True]
+        # Is the move set already in play? - if so, ignore the opponents last play
+        if len(self.__temp_vars) > 0:
+            # Make the move
+            move = move_set[self.__temp_vars['move_index']]
+            # AFTER each move, increment and see if the cycle is over
+            if self.__temp_vars['move_index'] == (len(move_set) - 1):
+                self.__temp_vars = {}
+            else:
+                self.__temp_vars['move_index'] += 1
+
+            return move
+        else:
+            if len(moves) == 0:
+                return True
+            # Did the opponent defect on the last move?
+            if moves[-1][1] == False:
+                self.__temp_vars['move_index'] = 1
+                return move_set[0]
+            else:
+                # Otherwise, cooperate
+                return True
+
+

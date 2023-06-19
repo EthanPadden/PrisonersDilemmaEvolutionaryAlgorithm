@@ -1,3 +1,5 @@
+import traceback
+
 import numpy as np
 from Participant import Participant
 
@@ -23,9 +25,13 @@ class Player(Participant):
         self.__current_strategy_index += 1
 
     def make_move(self, moves):
-        strategy_num = self.__strategies[self.__current_strategy_index]
-        strategy = self.strategies[strategy_num]
-        return strategy(moves)
+        try:
+            strategy_num = self.__strategies[self.__current_strategy_index]
+            strategy = self.strategies[strategy_num]
+            return strategy(moves)
+        except Exception as e:
+            print(traceback.format_exc())
+            return None
 
     def reset(self):
         self.__temp_variables = {}
