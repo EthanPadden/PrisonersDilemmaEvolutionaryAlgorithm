@@ -14,7 +14,7 @@ class Participant:
    * Hard Tit for Tat: Cooperates on the first move, and defects if the opponent has defected on any of the previous 3 moves, else cooperates.
    * Two Tits for Tat: Same as Tit For Tat except that it defects 2x whenever the opponent defects.
     Gradual: Cooperates on the first move, and cooperates as long as the opponent cooperates. After the first defection of the other player, it defects 1x and cooperates 2x. After the Nth defection it reacts with N consecutive defections and then calms down its opponent with two cooperations, in order to reset them if they are also forgiving.
-    Soft Grudger: Cooperates, until the opponent defects, then punishes them with D, D, D, D, C, C.
+   * Soft Grudger: Cooperates, until the opponent defects, then punishes them with D, D, D, D, C, C.
    * Grim trigger: Cooperates, until the opponent defects, and thereafter always defects.
    * Suspicious Tit for Tat: Same as Tit For Tat, except that it defects on the first move.
     Hard Majority: Defects on the first move, and defects if the number of defections of the opponent is greater than or equal to the number of times it has cooperated, else cooperates.
@@ -53,7 +53,8 @@ class Participant:
             self.grim_trigger,
             self.suspicious_tit_for_tat,
             self.reverse_tit_for_tat,
-            self.soft_grudger
+            self.soft_grudger,
+            self.hard_marjority
         ]
         self.__temp_vars = {}
 
@@ -206,4 +207,23 @@ class Participant:
                 # Otherwise, cooperate
                 return True
 
+    def hard_marjority(self, moves):
+        # Defects on the first move,
+        # and defects if the number of defections of the opponent is greater than or equal to the number of times it has cooperated,
+        # else cooperates.
+        if len(moves) == 0:
+            return False
+        else:
+            # Update the move totals
+            if len(self.__temp_vars) == 0:
+                self.__temp_vars[True] = 0
+                self.__temp_vars[False] = 0
+
+            self.__temp_vars[moves[-1][1]] += 1
+
+            # Now decide on the move
+            if self.__temp_vars[False] >= self.__temp_vars[True]:
+                return False
+            else:
+                return True
 
