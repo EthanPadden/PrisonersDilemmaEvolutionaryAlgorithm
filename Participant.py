@@ -39,24 +39,6 @@ class Participant:
     ]
     '''
     def __init__(self):
-        self.strategies = [
-            self.random,
-            self.always_cooperate,
-            self.always_defect,
-            self.tit_for_tat,
-            self.tit_for_2_tats,
-            self.firm_but_fair,
-            self.generous_tit_for_tat,
-            self.soft_majority,
-            self.hard_tit_for_tat,
-            self.two_tits_for_tat,
-            self.grim_trigger,
-            self.suspicious_tit_for_tat,
-            self.reverse_tit_for_tat,
-            self.soft_grudger,
-            self.hard_marjority,
-            self.collective_strategy
-        ]
         self.__temp_vars = {}
 
     def random(self, moves=None):
@@ -152,6 +134,7 @@ class Participant:
         # Cooperates, until the opponent defects, and thereafter always defects.
         # Use the temp variable opponent_has_defected to store if the opponent defected,
         # rather than iterating through all of the moves again
+        self.__temp_vars['opponent_has_defected'] = False
         if len(self.__temp_vars) == 0:
             if len(moves) == 0:
                 return True

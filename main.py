@@ -3,6 +3,7 @@ import math
 import traceback
 from datetime import datetime
 import random
+import settings as g
 
 from Participant import Participant
 
@@ -12,12 +13,11 @@ from Game import Game
 from Player import Player
 
 def evaluate(player):
-    for i in range(0, Player.num_strategies):
-        player.reset()
+    for i in range(0, g.num_strategies_per_player):
+        player.reset_for_next_strategy()
         game = Game(player)
         game.play()
         player.next_strategy()
-
 
 if __name__ == '__main__':
     '''
@@ -49,24 +49,22 @@ if __name__ == '__main__':
         Mutation: change a random strategy to some other random strategy
     '''
 
-    output_filename = f"output/output {datetime.now().strftime('Y-%m-%d_%H-%M-%S.csv')}"
-    population_size = 6
-    num_selected_solns = 4
-    max_generations = 6
+    output_filename = f"{g.output_directory}/output {datetime.now().strftime('Y-%m-%d_%H-%M-%S.csv')}"
 
     with open(output_filename, 'w', newline='') as file:
         writer = csv.writer(file)
 
         # INITIALISATION    ===================================
         current_gen = []
-        for i in range(0, population_size):
+        for i in range(0, g.population_size):
             current_gen.append(Player())
 
         for solution in current_gen:
             print(solution.to_string())
 
+        prev_avg_points = 0.00001
         #TODO: is the 0 argument in the range function necessary when used for 0 to value (not inclusive of the upper limit)?
-        for gen in range(0, max_generations):
+        for gen in range(0, g.max_generations):
             try:
                 # EVALUATION
                 for player in current_gen:
@@ -78,11 +76,25 @@ if __name__ == '__main__':
                     output.append(player.to_csv()[1])
                     writer.writerow(output)
 
+                # TODO: more comprehensive termination stage inc setting for max generations
+                # Termination
+                # Performance stagnation?
+                # Instead of a threshold value, we can take this as a percentage
+                # ie if we don't see an increase of at least 5% for the average fitness, stop
+                # Calculate average points
+                total_points = 0
+                for player in current_gen:
+                    total_points += player.get_points()
+                current_avg_points = total_points / len(current_gen)
+                diff_avg_points = current_avg_points - prev_avg_points
+                if ((diff_avg_points / prev_avg_points) * 100) < g.percentage_performance_stagnation:
+                    print(f'PERFORMANCE STAGNATION: {current_avg_points} - {prev_avg_points} = {diff_avg_points}')
+                    break
 
                 # SELECTION
                 sorted_solutions = sorted(current_gen, key=lambda solution: solution.get_points(), reverse=True)
                 next_gen = []
-                for i in range(0, num_selected_solns):
+                for i in range(0, g.num_selected_solns):
                     next_gen.append(sorted_solutions[i])
 
                 # VARIATION
@@ -90,46 +102,58 @@ if __name__ == '__main__':
                 print(sorted_solutions)
                 print(next_gen)
 
-                while (len(next_gen) < population_size):
-                    # choose the top 2 in the population - and pop them off so we dont consider them anymore
-                    parent_a = current_gen.pop(0)
-                    parent_b = current_gen.pop(0)
-                    # CROSSOVER HERE
-                    # offspring_c, offspring_d = tools.crossover(parent_a, parent_b)
-                    # ceil rather than floor - if we need to take 1 more from either parent it should be the one that has more points
-                    crossover_point = math.ceil(Player.num_strategies / 2)
-                    strategies_parent_a = parent_a.get_strategies()
-                    strategies_parent_b = parent_b.get_strategies()
+                if g.crossover == True:
+                    while (len(next_gen) < g.population_size):
+                        # choose the top 2 in the population - and pop them off so we dont consider them anymore
+                        parent_a = current_gen.pop(0)
+                        parent_b = current_gen.pop(0)
+                        # CROSSOVER HERE
+                        # offspring_c, offspring_d = tools.crossover(parent_a, parent_b)
+                        # ceil rather than floor - if we need to take 1 more from either parent it should be the one that has more points
+                        crossover_point = math.ceil(g.num_strategies_per_player / 2)
+                        strategies_parent_a = parent_a.get_strategies()
+                        strategies_parent_b = parent_b.get_strategies()
 
-                    strategies_offspring_c = np.concatenate((strategies_parent_a[:crossover_point], strategies_parent_b[crossover_point:]))
-                    strategies_offspring_d = np.concatenate((strategies_parent_b[:crossover_point], strategies_parent_a[crossover_point:]))
-                    offspring_c = Player(strategies_offspring_c)
-                    offspring_d = Player(strategies_offspring_d)
+                        strategies_offspring_c = np.concatenate((strategies_parent_a[:crossover_point], strategies_parent_b[crossover_point:]))
+                        strategies_offspring_d = np.concatenate((strategies_parent_b[:crossover_point], strategies_parent_a[crossover_point:]))
+                        offspring_c = Player(strategies_offspring_c)
+                        offspring_d = Player(strategies_offspring_d)
 
-                    # ADD SOLNS TO NEXT GEN
-                    next_gen.append(offspring_c)
-                    if len(next_gen) < population_size:
-                        next_gen.append(offspring_d)
-
+                        # ADD SOLNS TO NEXT GEN
+                        next_gen.append(offspring_c)
+                        if len(next_gen) < g.population_size:
+                            next_gen.append(offspring_d)
+                else:
+                    # Just fill up the rest of the slots with the sorted population
+                    while (len(next_gen) < g.population_size):
+                        j = g.num_selected_solns
+                        next_gen.append(sorted_solutions[j])
+                        j += 1
                 # mutation
-                # choose a random number of players in next generation
-                num_players_to_mutate = random.randint(1, population_size)
-                for i in range(1, num_players_to_mutate):
-                    # choose a random player
-                    player_index_to_mutate = random.randint(0, (population_size - 1))
-                    player_to_mutate = next_gen[player_index_to_mutate]
+                if g.mutation == True:
+                    # choose a random number of players in next generation
+                    num_players_to_mutate = random.randint(1, g.population_size)
+                    for i in range(1, num_players_to_mutate):
+                        # choose a random player
+                        player_index_to_mutate = random.randint(0, (g.population_size - 1))
+                        player_to_mutate = next_gen[player_index_to_mutate]
 
-                    # choose a random number of strategies to change? TODO
-                    # choose a random strategy to change and a random value to change it to
-                    strategy_index_to_change = random.randint(0, (Player.num_strategies - 1))
-                    #TODO: ensure this is not the same as before?
-                    # TODO: check if these range endpoints are includive/exclusive - currently assuming both inclusive
-                    value_to_change_to = random.randint(0, (len(player_to_mutate.strategies)-1))
+                        # choose a random number of strategies to change? TODO
+                        # choose a random strategy to change and a random value to change it to
+                        strategy_index_to_change = random.randint(0, (g.num_strategies_per_player - 1))
+                        #TODO: ensure this is not the same as before?
+                        # TODO: check if these range endpoints are includive/exclusive - currently assuming both inclusive
+                        value_to_change_to = random.randint(0, (len(player_to_mutate.strategies)-1))
 
-                    player_to_mutate.get_strategies()[strategy_index_to_change] = value_to_change_to
-                    # TODO: more efficient way
+                        player_to_mutate.get_strategies()[strategy_index_to_change] = value_to_change_to
+                        # TODO: more efficient way
+
+                for player_to_reset in next_gen:
+                    player_to_reset.reset_points()
 
                 current_gen = next_gen
+                prev_avg_points = current_avg_points
+
             except Exception as e:
                 print(f'GENERATION: {gen}')
                 print(traceback.format_exc())
