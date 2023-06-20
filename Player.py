@@ -2,14 +2,14 @@ import traceback
 
 import numpy as np
 from Participant import Participant
+import settings as g
 
 
 class Player(Participant):
-    num_strategies = 6
     def __init__(self, strategies=None):
         super().__init__()
         if strategies is None:
-            self.__strategies = np.random.randint(0, len(self.strategies), size=Player.num_strategies)
+            self.__strategies = np.random.randint(0, len(self.strategies), size=g.num_strategies)
         else:
             self.__strategies = strategies
         self.__points = 0

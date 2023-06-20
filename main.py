@@ -13,7 +13,7 @@ from Game import Game
 from Player import Player
 
 def evaluate(player):
-    for i in range(0, Player.num_strategies):
+    for i in range(0, g.num_strategies):
         player.reset()
         game = Game(player)
         game.play()
@@ -110,7 +110,7 @@ if __name__ == '__main__':
                     # CROSSOVER HERE
                     # offspring_c, offspring_d = tools.crossover(parent_a, parent_b)
                     # ceil rather than floor - if we need to take 1 more from either parent it should be the one that has more points
-                    crossover_point = math.ceil(Player.num_strategies / 2)
+                    crossover_point = math.ceil(g.num_strategies / 2)
                     strategies_parent_a = parent_a.get_strategies()
                     strategies_parent_b = parent_b.get_strategies()
 
@@ -134,7 +134,7 @@ if __name__ == '__main__':
 
                     # choose a random number of strategies to change? TODO
                     # choose a random strategy to change and a random value to change it to
-                    strategy_index_to_change = random.randint(0, (Player.num_strategies - 1))
+                    strategy_index_to_change = random.randint(0, (g.num_strategies - 1))
                     #TODO: ensure this is not the same as before?
                     # TODO: check if these range endpoints are includive/exclusive - currently assuming both inclusive
                     value_to_change_to = random.randint(0, (len(player_to_mutate.strategies)-1))

@@ -10,6 +10,10 @@ graph_option = GraphOption.LINE_GRAPH_POINTS
 
 # Initialisation
 population_size = 6
+num_strategies = 6
+
+# Evaluation
+num_rounds_per_game = 8
 
 # Selection
 num_selected_solns = 4

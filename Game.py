@@ -1,8 +1,7 @@
+import settings as g
 from Opponent import Opponent
 
-
 class Game:
-    num_rounds = 8
     def __init__(self, player):
         self.__player = player
         self.__opponent = Opponent()
@@ -17,7 +16,7 @@ class Game:
         self.__moves = []
 
     def play(self):
-        for i in range(0, Game.num_rounds):
+        for i in range(0, g.num_rounds_per_game):
             move_A = self.__player.make_move(self.__moves)
             move_B = self.__opponent.random(self.__moves)
 
