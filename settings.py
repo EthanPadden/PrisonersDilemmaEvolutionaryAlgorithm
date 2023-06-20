@@ -22,4 +22,8 @@ num_selected_solns = 4
 max_generations = 6
 percentage_performance_stagnation = 15
 
+# Variation
+crossover = True
+mutation = True
+
 # TODO: options for what strategies to include

@@ -103,44 +103,51 @@ if __name__ == '__main__':
                 print(sorted_solutions)
                 print(next_gen)
 
-                while (len(next_gen) < g.population_size):
-                    # choose the top 2 in the population - and pop them off so we dont consider them anymore
-                    parent_a = current_gen.pop(0)
-                    parent_b = current_gen.pop(0)
-                    # CROSSOVER HERE
-                    # offspring_c, offspring_d = tools.crossover(parent_a, parent_b)
-                    # ceil rather than floor - if we need to take 1 more from either parent it should be the one that has more points
-                    crossover_point = math.ceil(g.num_strategies / 2)
-                    strategies_parent_a = parent_a.get_strategies()
-                    strategies_parent_b = parent_b.get_strategies()
+                if g.crossover == True:
+                    while (len(next_gen) < g.population_size):
+                        # choose the top 2 in the population - and pop them off so we dont consider them anymore
+                        parent_a = current_gen.pop(0)
+                        parent_b = current_gen.pop(0)
+                        # CROSSOVER HERE
+                        # offspring_c, offspring_d = tools.crossover(parent_a, parent_b)
+                        # ceil rather than floor - if we need to take 1 more from either parent it should be the one that has more points
+                        crossover_point = math.ceil(g.num_strategies / 2)
+                        strategies_parent_a = parent_a.get_strategies()
+                        strategies_parent_b = parent_b.get_strategies()
 
-                    strategies_offspring_c = np.concatenate((strategies_parent_a[:crossover_point], strategies_parent_b[crossover_point:]))
-                    strategies_offspring_d = np.concatenate((strategies_parent_b[:crossover_point], strategies_parent_a[crossover_point:]))
-                    offspring_c = Player(strategies_offspring_c)
-                    offspring_d = Player(strategies_offspring_d)
+                        strategies_offspring_c = np.concatenate((strategies_parent_a[:crossover_point], strategies_parent_b[crossover_point:]))
+                        strategies_offspring_d = np.concatenate((strategies_parent_b[:crossover_point], strategies_parent_a[crossover_point:]))
+                        offspring_c = Player(strategies_offspring_c)
+                        offspring_d = Player(strategies_offspring_d)
 
-                    # ADD SOLNS TO NEXT GEN
-                    next_gen.append(offspring_c)
-                    if len(next_gen) < g.population_size:
-                        next_gen.append(offspring_d)
-
+                        # ADD SOLNS TO NEXT GEN
+                        next_gen.append(offspring_c)
+                        if len(next_gen) < g.population_size:
+                            next_gen.append(offspring_d)
+                else:
+                    # Just fill up the rest of the slots with the sorted population
+                    while (len(next_gen) < g.population_size):
+                        j = g.num_selected_solns
+                        next_gen.append(sorted_solutions[j])
+                        j += 1
                 # mutation
-                # choose a random number of players in next generation
-                num_players_to_mutate = random.randint(1, g.population_size)
-                for i in range(1, num_players_to_mutate):
-                    # choose a random player
-                    player_index_to_mutate = random.randint(0, (g.population_size - 1))
-                    player_to_mutate = next_gen[player_index_to_mutate]
+                if g.mutation == True:
+                    # choose a random number of players in next generation
+                    num_players_to_mutate = random.randint(1, g.population_size)
+                    for i in range(1, num_players_to_mutate):
+                        # choose a random player
+                        player_index_to_mutate = random.randint(0, (g.population_size - 1))
+                        player_to_mutate = next_gen[player_index_to_mutate]
 
-                    # choose a random number of strategies to change? TODO
-                    # choose a random strategy to change and a random value to change it to
-                    strategy_index_to_change = random.randint(0, (g.num_strategies - 1))
-                    #TODO: ensure this is not the same as before?
-                    # TODO: check if these range endpoints are includive/exclusive - currently assuming both inclusive
-                    value_to_change_to = random.randint(0, (len(player_to_mutate.strategies)-1))
+                        # choose a random number of strategies to change? TODO
+                        # choose a random strategy to change and a random value to change it to
+                        strategy_index_to_change = random.randint(0, (g.num_strategies - 1))
+                        #TODO: ensure this is not the same as before?
+                        # TODO: check if these range endpoints are includive/exclusive - currently assuming both inclusive
+                        value_to_change_to = random.randint(0, (len(player_to_mutate.strategies)-1))
 
-                    player_to_mutate.get_strategies()[strategy_index_to_change] = value_to_change_to
-                    # TODO: more efficient way
+                        player_to_mutate.get_strategies()[strategy_index_to_change] = value_to_change_to
+                        # TODO: more efficient way
 
                 current_gen = next_gen
                 prev_avg_points = current_avg_points
