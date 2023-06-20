@@ -39,24 +39,6 @@ class Participant:
     ]
     '''
     def __init__(self):
-        self.strategies = [
-            self.random,
-            self.always_cooperate,
-            self.always_defect,
-            self.tit_for_tat,
-            self.tit_for_2_tats,
-            self.firm_but_fair,
-            self.generous_tit_for_tat,
-            self.soft_majority,
-            self.hard_tit_for_tat,
-            self.two_tits_for_tat,
-            self.grim_trigger,
-            self.suspicious_tit_for_tat,
-            self.reverse_tit_for_tat,
-            self.soft_grudger,
-            self.hard_marjority,
-            self.collective_strategy
-        ]
         self.__temp_vars = {}
 
     def random(self, moves=None):
