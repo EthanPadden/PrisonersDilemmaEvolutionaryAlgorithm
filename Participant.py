@@ -134,7 +134,8 @@ class Participant:
         # Cooperates, until the opponent defects, and thereafter always defects.
         # Use the temp variable opponent_has_defected to store if the opponent defected,
         # rather than iterating through all of the moves again
-        self.__temp_vars['opponent_has_defected'] = False
+        if len(self.__temp_vars) == 0:
+            self.__temp_vars['opponent_has_defected'] = False
         if len(self.__temp_vars) == 0:
             if len(moves) == 0:
                 return True
