@@ -14,11 +14,10 @@ from Player import Player
 
 def evaluate(player):
     for i in range(0, g.num_strategies_per_player):
-        player.reset()
+        player.reset_for_next_strategy()
         game = Game(player)
         game.play()
         player.next_strategy()
-
 
 if __name__ == '__main__':
     '''
@@ -149,8 +148,12 @@ if __name__ == '__main__':
                         player_to_mutate.get_strategies()[strategy_index_to_change] = value_to_change_to
                         # TODO: more efficient way
 
+                for player_to_reset in next_gen:
+                    player_to_reset.reset_points()
+
                 current_gen = next_gen
                 prev_avg_points = current_avg_points
+
             except Exception as e:
                 print(f'GENERATION: {gen}')
                 print(traceback.format_exc())

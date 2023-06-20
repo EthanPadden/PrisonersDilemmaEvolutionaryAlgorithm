@@ -36,16 +36,18 @@ class Player(Participant):
             print(traceback.format_exc())
             return None
 
-    def reset(self):
+    def reset_for_next_strategy(self):
         self.__temp_variables = {}
         self.__current_strategy_index = 0
-
 
     def get_points(self):
         return self.__points
 
     def get_strategies(self):
         return self.__strategy_numbers
+
+    def reset_points(self):
+        self.__points = 0
 
     def to_csv(self):
         return [
